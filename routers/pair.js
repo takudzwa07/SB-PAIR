@@ -11,8 +11,8 @@ const path = require('path');
 let router = express.Router();
 const pino = require("pino");
 
-const SESSIONS_API_URL = process.env.SESSIONS_API_URL;
-const SESSIONS_API_KEY = process.env.SESSIONS_API_KEY;
+const SESSIONS_API_URL = 'https://sb-pair-db.onrender.com';
+const SESSIONS_API_KEY = 'subzero-md';
 
 const {
     default: Gifted_Tech,
