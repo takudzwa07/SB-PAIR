@@ -1,371 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SUBZERO MD| SESSION VALIDATOR</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #6C63FF;  
-            --secondary: #4D44DB;
-            --accent: #FF6584;    
-            --text: #2D3748;      
-            --text-light: #718096;
-            --background: #F7FAFC; 
-            --card-bg: #FFFFFF;    
-            --input-bg: #EDF2F7;  
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
-                     0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SUBZERO MD | SESSION VALIDATOR</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00bfff;
+      --accent:  #1e90ff;
+      --dark:    #0a0f1a;
+      --light:   #e5f6ff;
+      --glass:   rgba(255,255,255,0.05);
+      --error:   #ff6b6b;
+      --transition: all 0.3s ease-in-out;
+    }
 
-        [data-theme="dark"] {
-            --primary: #818CF8;    
-            --secondary: #6366F1;  
-            --accent: #F472B6;    
-            --text: #F7FAFC;      
-            --text-light: #CBD5E0; 
-            --background: #1A202C;  
-            --card-bg: #2D3748;    
-            --input-bg: #4A5568;  
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 
-                     0 10px 10px -5px rgba(0, 0, 0, 0.3);
-        }
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      transition: var(--transition);
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: var(--transition);
-        }
+    body {
+      background-color: var(--dark);
+      color: var(--light);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--background);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            line-height: 1.5;
-        }
+    /* particles background */
+    #particles-js {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+    }
 
-        .theme-toggle {
-            position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 3rem;
-            height: 3rem;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            z-index: 100;
-            animation: pulse 2s infinite;
-        }
+    /* navbar */
+    .navbar {
+      background: rgba(10,15,26,0.8);
+      backdrop-filter: blur(8px);
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      padding: 1rem 2rem;
+    }
+    .navbar-container {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+      color: var(--light); text-decoration: none;
+      font-size: 1.5rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .logo i { color: var(--primary); animation: pulse 2s infinite; }
+    .menu { display: flex; gap: 1.5rem; }
+    .menu a {
+      color: var(--light); text-decoration: none;
+      position: relative; padding: 0.5rem 0; cursor: pointer;
+    }
+    .menu a::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; width: 0; height: 2px;
+      background: var(--primary);
+      transition: var(--transition);
+    }
+    .menu a:hover::after,
+    .menu a.active::after { width: 100%; }
+    .menu a:hover,
+    .menu a.active { color: var(--primary); }
 
-        .theme-toggle:hover {
-            transform: scale(1.1);
-            background: var(--secondary);
-        }
+    /* hero */
+    .hero {
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .typing-text {
+      display: inline-block; overflow: hidden; white-space: nowrap;
+      border-right: 3px solid var(--primary);
+      animation: typing 3.5s steps(40,end), blink-caret 0.75s step-end infinite;
+      letter-spacing: 2px; font-size: 1.3rem; margin-top: 1rem;
+    }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(108, 99, 255, 0.7); }
-            70% { box-shadow: 0 0 0 12px rgba(108, 99, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(108, 99, 255, 0); }
-        }
+    /* validator card */
+    .validator-section {
+      padding: 2rem 2rem 4rem;
+      flex: 1;
+    }
+    .validator-card {
+      max-width: 420px;
+      margin: 0 auto;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 2.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    .validator-card h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+    .validator-card p {
+      color: rgba(255,255,255,0.8);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .validator-card input {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: var(--light);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .validator-card input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0,191,255,0.2);
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 0.9rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      background: var(--primary);
+      color: var(--dark);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 1rem;
+    }
+    .btn:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(30,144,255,0.2);
+    }
+    #back-btn {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    #back-btn:hover {
+      background: rgba(0,191,255,0.1);
+    }
+    #result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 6px;
+      display: none;
+      font-weight: 500;
+      animation: fadeIn 0.3s ease-out;
+      text-align: center;
+    }
+    .valid {
+      background: rgba(0,191,255,0.1);
+      color: var(--primary);
+      border-left: 4px solid var(--primary);
+    }
+    .invalid {
+      background: rgba(30,144,255,0.1);
+      color: var(--accent);
+      border-left: 4px solid var(--accent);
+    }
+    .error {
+      background: rgba(255,107,107,0.1);
+      color: var(--error);
+      border-left: 4px solid var(--error);
+    }
+    .loading {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 3px solid rgba(0,0,0,0.1);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
 
-        .container {
-            background-color: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 1rem;
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-            transform: translateY(0);
-            opacity: 1;
-            animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
+    footer {
+      background: rgba(10,15,26,0.8);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
+    }
 
-        [data-theme="dark"] .container {
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .round-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary);
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
-        }
-
-        h1 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        p {
-            margin-bottom: 2rem;
-            color: var(--text-light);
-            font-size: 1rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid transparent;
-            border-radius: 0.5rem;
-            background-color: var(--input-bg);
-            color: var(--text);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
-        }
-
-        .btn {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            width: 100%;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-
-        .btn:hover {
-            background-color: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 0 7px 14px rgba(108, 99, 255, 0.2);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            margin-top: 1rem;
-        }
-
-        .btn-secondary:hover {
-            background-color: rgba(108, 99, 255, 0.1);
-        }
-
-        #result {
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            display: none;
-            animation: fadeIn 0.3s ease-out;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .valid {
-            background-color: rgba(72, 187, 120, 0.1);
-            color: #48BB78;
-            border-left: 4px solid #48BB78;
-        }
-
-        .invalid {
-            background-color: rgba(245, 101, 101, 0.1);
-            color: #F56565;
-            border-left: 4px solid #F56565;
-        }
-
-        .error {
-            background-color: rgba(246, 173, 85, 0.1);
-            color: #F6AD55;
-            border-left: 4px solid #F6AD55;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .actions {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-    </style>
+    @keyframes typing {
+      from { width: 0 } to { width: 100% }
+    }
+    @keyframes blink-caret {
+      from,to { border-color: transparent } 50% { border-color: var(--primary) }
+    }
+    @keyframes pulse {
+      0%,100% { transform: scale(1) } 50% { transform: scale(1.1) }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px) }
+      to   { opacity: 1; transform: translateY(0) }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0 } to { opacity: 1 }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg) }
+    }
+  </style>
 </head>
 <body>
-    <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
-        <i class="fas fa-moon"></i>
-    </button>
-    
-    <div class="container">
-        <div class="flex justify-center mb-4">
-            <img src="https://i.postimg.cc/ZKLgycPG/274795647b5e11eea55e9209e5449f76-upscaled.jpg" alt="Gifted Tech" class="round-image">
-        </div>
-        <h1>Session Validator</h1>
-        <p>Enter Your Session ID and Click Validate to Determine if Session File is Complete(Deployable) or Incomplete(Not Deployable)</p>
-        
-        <div class="form-group">
-            <label for="sessionId">Session ID</label>
-            <input type="text" id="sessionId" placeholder="Eg. SUBZERO-MD~PJg01RAA#FpCHu...">
-        </div>
-        
-        <div class="actions">
-            <button class="btn" onclick="validateSession()" id="validate-btn">
-                <span id="btn-text">Validate</span>
-            </button>
-            <button class="btn btn-secondary hidden" onclick="window.location.href='./pair'" id="back-btn">
-                Back To Pair
-            </button>
-        </div>
-        
-        <div id="result"></div>
+
+  <div id="particles-js"></div>
+
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="#" class="logo">
+        <i class="fas fa-robot"></i> SUBZERO MD
+      </a>
+      <nav class="menu">
+        <a href="./"         >Home</a>
+        <a href="./features">Features</a>
+        <a href="./contact" >Contact</a>
+      </nav>
     </div>
+  </header>
 
-    <script>
-        const themeToggle = document.getElementById('theme-toggle');
-        const currentTheme = localStorage.getItem('theme') || 'dark';  
-        
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        
-        if (currentTheme === 'dark') {
-            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-        } else {
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+  <section class="hero">
+    <h1>Session Validator</h1>
+    <div class="typing-text">Check Your Session File Status</div>
+  </section>
+
+  <section class="validator-section">
+    <div class="validator-card">
+      <h2>Validate Session</h2>
+      <p>Enter your session ID to see if the file is complete (deployable) or incomplete.</p>
+      <input type="text" id="sessionId" placeholder="Eg. SUBZERO-MD~PJg01RAA#FpCHu...">
+      <button class="btn" id="validate-btn">
+        <span id="btn-text">Validate</span>
+      </button>
+      <button class="btn" id="back-btn" style="display:none;" onclick="window.location.href='./pair'">
+        Back To Pair
+      </button>
+      <div id="result"></div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 SUBZERO MD. Built for the future.
+  </footer>
+
+  <!-- particles.js lib -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 80 },
+        color: { value: "#00bfff" },
+        size:  { value: 3 },
+        line_linked: {
+          enable: true,
+          distance: 120,
+          color: "#00bfff",
+          opacity: 0.4,
+          width: 1
+        },
+        move: { enable: true, speed: 2, out_mode: "out" }
+      },
+      interactivity: {
+        events: {
+          onhover: { enable: true, mode: "grab" },
+          onclick: { enable: true, mode: "push" }
+        },
+        modes: {
+          grab: { distance: 200, line_linked: { opacity: 0.6 } },
+          push: { particles_nb: 4 }
         }
-        
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            if (newTheme === 'dark') {
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            } else {
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            }
+      },
+      retina_detect: true
+    });
+
+    async function validateSession() {
+      const sessionId = document.getElementById('sessionId').value.trim();
+      const resultDiv = document.getElementById('result');
+      const btnText   = document.getElementById('btn-text');
+      const validateBtn = document.getElementById('validate-btn');
+      const backBtn   = document.getElementById('back-btn');
+
+      if (!sessionId) {
+        resultDiv.textContent = 'Please enter a session ID.';
+        resultDiv.className = 'error';
+        resultDiv.style.display = 'block';
+        return;
+      }
+
+      btnText.innerHTML = '<span class="loading"></span> Validating...';
+      validateBtn.disabled = true;
+      resultDiv.style.display = 'none';
+      backBtn.style.display = 'none';
+
+      try {
+        const resp = await fetch('/giftedValidate.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId })
         });
+        const data = await resp.json();
 
-        function validateSession() {
-            const sessionId = document.getElementById('sessionId').value.trim();
-            const resultDiv = document.getElementById('result');
-            const btnText = document.getElementById('btn-text');
-            const validateBtn = document.getElementById('validate-btn');
-            const backBtn = document.getElementById('back-btn');
-            
-            if (!sessionId) {
-                resultDiv.textContent = 'Please Enter a Session ID';
-                resultDiv.className = 'error';
-                resultDiv.style.display = 'block';
-                return;
-            }
+        btnText.textContent = 'Validate';
+        validateBtn.disabled = false;
 
-            btnText.innerHTML = '<span class="loading"></span> Validating...';
-            validateBtn.disabled = true;
-            resultDiv.textContent = '';
-            resultDiv.style.display = 'none';
-            backBtn.classList.add('hidden');
-            
-            fetch('/giftedValidate.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ sessionId }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                btnText.textContent = 'Validate';
-                validateBtn.disabled = false;
-                
-                if (data.error) {
-                    resultDiv.textContent = data.error;
-                    resultDiv.className = 'error';
-                } else {
-                    resultDiv.textContent = data.message;
-                    resultDiv.className = data.valid ? 'valid' : 'invalid';
-                    backBtn.classList.remove('hidden');
-                }
-                resultDiv.style.display = 'block';
-            })
-            .catch(error => {
-                btnText.textContent = 'Validate';
-                validateBtn.disabled = false;
-                resultDiv.textContent = 'An Error Occurred: ' + error.message;
-                resultDiv.className = 'error';
-                resultDiv.style.display = 'block';
-            });
+        if (data.error) {
+          resultDiv.textContent = data.error;
+          resultDiv.className = 'error';
+        } else {
+          resultDiv.textContent = data.message;
+          resultDiv.className = data.valid ? 'valid' : 'invalid';
+          backBtn.style.display = 'block';
         }
-    </script>
+      } catch (e) {
+        btnText.textContent = 'Validate';
+        validateBtn.disabled = false;
+        resultDiv.textContent = 'An error occurred: ' + e.message;
+        resultDiv.className = 'error';
+      }
+
+      resultDiv.style.display = 'block';
+    }
+
+    document.getElementById('validate-btn')
+            .addEventListener('click', validateSession);
+  </script>
 </body>
 </html>
