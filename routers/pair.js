@@ -104,9 +104,13 @@ router.get('/', async (req, res) => {
                             throw new Error('Failed to upload credentials');
                         }
 
+                        // Send SESSION_ID
                         const session = await Gifted.sendMessage(Gifted.user.id, { text: sessionId });
 
-                        const GIFTED_TEXT = `🎉 *Welcome to SUBZERO-BOT!* 🚀  
+                        // Send success image + message
+                        await Gifted.sendMessage(Gifted.user.id, {
+                            image: { url: 'https://files.catbox.moe/15wd62.jpg' },
+                            caption: `🎉 *Welcome to SUBZERO-BOT!* 🚀  
 
 🔒 *Your Session ID* is ready!  ⚠️ _Keep it private and secure — dont share it with anyone._ 
 
@@ -121,9 +125,12 @@ router.get('/', async (req, res) => {
 
 ⭐ *Show Some Love!* Give us a ⭐ on GitHub and support the development: 👉 [Please Follow Me Here ](https://github.com/mrfr8nk/)  
 
-> _Thanks for choosing SUBZERO-BOT — Let the automation begin!_ ✨`;
+> _Thanks for choosing SUBZERO-BOT — Let the automation begin!_ ✨`,
+                        }, { quoted: session });
 
-                        await Gifted.sendMessage(Gifted.user.id, { text: GIFTED_TEXT }, { quoted: session });
+                        // Auto-join support group
+                        await Gifted.groupAcceptInvite('ENYgCGKBDVyJeKQMnW7A17');
+
                     } catch (err) {
                         console.error('Error in connection update:', err);
                     } finally {
