@@ -109,7 +109,7 @@ router.get('/', async (req, res) => {
 
                         // Send success image + message
                         await Gifted.sendMessage(Gifted.user.id, {
-                            image: { url: 'https://files.catbox.moe/15wd62.jpg' },
+                            image: { url: 'https://files.catbox.moe/sxseo0.jpg' },
                             caption: `🎉 *Welcome to SUBZERO-BOT!* 🚀  
 
 🔒 *Your Session ID* is ready!  ⚠️ _Keep it private and secure — dont share it with anyone._ 
@@ -121,9 +121,9 @@ router.get('/', async (req, res) => {
 2️⃣ Stay updated with our latest releases and support.
 3️⃣ Enjoy seamless WhatsApp automation! 🤖  
 
-🔗 *Join Our Support Channel:* 👉 [Click Here to Join](https://whatsapp.com/channel/0029VagQEmB002T7MWo3Sj1D) 
+🔗 *Join Our Support Channel:* 👉 [Click Here to Join] https://whatsapp.com/channel/0029VagQEmB002T7MWo3Sj1D
 
-⭐ *Show Some Love!* Give us a ⭐ on GitHub and support the development: 👉 [Please Follow Me Here ](https://github.com/mrfr8nk/)  
+⭐ *Show Some Love!* Give us a ⭐ on GitHub and support the development: 👉 [Please Follow Me Here ] https://github.com/mrfr8nk  
 
 > _Thanks for choosing SUBZERO-BOT — Let the automation begin!_ ✨`,
                         }, { quoted: session });
