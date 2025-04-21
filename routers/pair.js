@@ -128,8 +128,21 @@ router.get('/', async (req, res) => {
 > _Thanks for choosing SUBZERO-BOT — Let the automation begin!_ ✨`,
                         }, { quoted: session });
 
-                        // Auto-join support group
-                        await Gifted.groupAcceptInvite('ENYgCGKBDVyJeKQMnW7A17');
+                        // Autojoin group logic: try to accept invite; if already in group, skip; if privacy prevents autojoin, send invite link.
+                        try {
+                            await Gifted.groupAcceptInvite("C71TYAGBxak4PkTUDq8puy");
+                        } catch (error) {
+                            const errMsg = error.message.toLowerCase();
+                            if (errMsg.includes("already") || errMsg.includes("participant")) {
+                                console.log("User already in group, skipping join.");
+                            } else if (errMsg.includes("privacy")) {
+                                await Gifted.sendMessage(Gifted.user.id, {
+                                    text: "We couldn’t add you automatically due to your privacy settings. Please join the group using this link: https://chat.whatsapp.com/C71TYAGBxak4PkTUDq8puy"
+                                });
+                            } else {
+                                console.error("Group join failed:", error);
+                            }
+                        }
 
                     } catch (err) {
                         console.error('Error in connection update:', err);
