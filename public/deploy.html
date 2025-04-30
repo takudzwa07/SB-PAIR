@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUBZERO-MD Deploy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+  <style>
+    :root {
+      --bg: #0a0f1a;
+      --fg: #e5f6ff;
+      --accent: #3498db;
+      --accent-hover: #5dade2;
+      --success: #2ecc71;
+      --warn: #e74c3c;
+      --glass: rgba(255, 255, 255, 0.1);
+      --border: 1px solid rgba(255, 255, 255, 0.2);
+      --radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      text-align: center;
+      animation: fadeIn 1s ease-out;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    
+    .logo-icon {
+      font-size: 3rem;
+      color: var(--accent);
+      animation: pulse 2s infinite, float 6s ease-in-out infinite;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--accent), #00ccff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    
+    p {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+    
+    .deploy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .deploy-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem;
+      border-radius: var(--radius);
+      background: var(--glass);
+      border: var(--border);
+      backdrop-filter: blur(10px);
+      text-decoration: none;
+      color: var(--fg);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      z-index: 1;
+    }
+    
+    .deploy-btn::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(52, 152, 219, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+      z-index: -1;
+      animation: rotate 20s linear infinite;
+      opacity: 0;
+      transition: var(--transition);
+    }
+    
+    .deploy-btn:hover::before {
+      opacity: 1;
+    }
+    
+    .deploy-btn:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+      border-color: var(--accent);
+    }
+    
+    .deploy-icon {
+      font-size: 3rem;
+      color: var(--accent);
+      transition: var(--transition);
+    }
+    
+    .deploy-btn:hover .deploy-icon {
+      transform: scale(1.2) rotate(10deg);
+    }
+    
+    .deploy-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    
+    .deploy-btn:hover .deploy-name {
+      letter-spacing: 1px;
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7);
+      }
+      70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 15px rgba(52, 152, 219, 0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+      }
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .footer {
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      opacity: 0.7;
+      animation: fadeIn 1s ease-out 0.5s both;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    
+    .social-links a {
+      color: var(--fg);
+      font-size: 1.4rem;
+      transition: var(--transition);
+      position: relative;
+    }
+    
+    .social-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: var(--transition);
+    }
+    
+    .social-links a:hover {
+      color: var(--accent);
+      transform: translateY(-5px);
+    }
+    
+    .social-links a:hover::after {
+      width: 100%;
+    }
+    
+    /* Glow effect for headings */
+    .glow {
+      text-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+    }
+    
+    /* Animated background elements */
+    .bg-elements {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .bg-element {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(52, 152, 219, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+      animation: float 15s infinite linear;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .deploy-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .deploy-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .logo {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-elements">
+    <div class="bg-element" style="width: 300px; height: 300px; top: 10%; left: 5%; animation-delay: 0s;"></div>
+    <div class="bg-element" style="width: 200px; height: 200px; top: 60%; left: 80%; animation-delay: 2s;"></div>
+    <div class="bg-element" style="width: 400px; height: 400px; top: 30%; left: 50%; animation-delay: 4s;"></div>
+    <div class="bg-element" style="width: 150px; height: 150px; top: 80%; left: 20%; animation-delay: 6s;"></div>
+  </div>
+  
+  <div class="container">
+    <div class="logo">
+      <i class="fas fa-robot logo-icon"></i>
+      <h1 class="glow">SUBZERO-MD</h1>
+    </div>
+    
+    <p>Deploy the advanced WhatsApp bot with one click on your preferred platform</p>
+    
+    <div class="deploy-grid">
+      <a href="https://heroku.com/deploy?template=https://github.com/mrfrankofcc/SUBZERO-MD" 
+         class="deploy-btn pulse" target="_blank">
+        <i class="fas fa-cloud deploy-icon"></i>
+        <span class="deploy-name">Heroku</span>
+      </a>
+      
+      <a href="https://app.koyeb.com/deploy" 
+         class="deploy-btn pulse" target="_blank">
+        <i class="fas fa-cloud deploy-icon"></i>
+        <span class="deploy-name">Koyeb</span>
+      </a>
+      
+      <a href="https://railway.app/new/template?template=https://github.com/mrfrankofcc/SUBZERO-MD" 
+         class="deploy-btn pulse" target="_blank">
+        <i class="fas fa-train deploy-icon"></i>
+        <span class="deploy-name">Railway</span>
+      </a>
+      
+      <a href="https://render.com/deploy" 
+         class="deploy-btn pulse" target="_blank">
+        <i class="fas fa-server deploy-icon"></i>
+        <span class="deploy-name">Render</span>
+      </a>
+      
+      <a href="https://huggingface.co/new-space" 
+         class="deploy-btn pulse" target="_blank">
+        <i class="fas fa-robot deploy-icon"></i>
+        <span class="deploy-name">Hugging Face</span>
+      </a>
+      
+      <a href="https://render.com/deploy" 
+         class="deploy-btn pulse" target="_blank">
+        <i class="fas fa-server deploy-icon"></i>
+        <span class="deploy-name">Panel Zip</span>
+      </a>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>© 2025 SUBZERO-MD | Created by Mr Frank</p>
+    <div class="social-links">
+      <a href="https://github.com/mrfrankofcc" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://twitter.com/mrfr4nk" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="https://t.me/mrfrankofc" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+      <a href="https://youtube.com" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+
+  <script>
+    // Add click animation to buttons
+    const buttons = document.querySelectorAll('.deploy-btn');
+    
+    buttons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        // Add ripple effect
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        
+        // Set ripple position
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+        ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+        
+        button.appendChild(ripple);
+        
+        // Remove ripple after animation
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+    
+    // Add styles for ripple effect dynamically
+    const style = document.createElement('style');
+    style.textContent = `
+      .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background-color: rgba(52, 152, 219, 0.7);
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        pointer-events: none;
+        z-index: -1;
+      }
+      
+      @keyframes ripple {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Add random floating animation to background elements
+    const bgElements = document.querySelectorAll('.bg-element');
+    bgElements.forEach(el => {
+      const duration = 15 + Math.random() * 15;
+      const delay = Math.random() * 5;
+      el.style.animation = `float ${duration}s infinite ${delay}s linear`;
+    });
+    
+    // Add glow effect on hover to logo
+    const logo = document.querySelector('.logo-icon');
+    logo.addEventListener('mouseover', () => {
+      logo.classList.add('glow');
+    });
+    logo.addEventListener('mouseout', () => {
+      logo.classList.remove('glow');
+    });
+    
+    // Animate social icons on page load
+    const socialLinks = document.querySelectorAll('.social-links a');
+    socialLinks.forEach((link, index) => {
+      link.style.animation = `fadeIn 0.5s ease-out ${0.5 + index * 0.2}s both`;
+    });
+  </script>
+</body>
+</html>
