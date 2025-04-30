@@ -7,6 +7,7 @@ const PORT = process.env.PORT || 8000;
 let qrRoute = require('./routers/qr');
 let pairRoute = require('./routers/pair');
 let validateRoute = require('./routers/validate');
+let deployRoute = require('./routers/deploy');
 require('events').EventEmitter.defaultMaxListeners = 1500;
 
 app.use(bodyParser.json());
@@ -23,6 +24,10 @@ app.get('/validate', (req, res) => {
 
 app.get('/pair', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'pair.html'));
+});
+
+app.get('/deploy', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'deploy.html'));
 });
 
 app.get('/', (req, res) => {
