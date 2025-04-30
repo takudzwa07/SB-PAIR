@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 8000;
 let qrRoute = require('./routers/qr');
 let pairRoute = require('./routers/pair');
 let validateRoute = require('./routers/validate');
-let deployRoute = require('./routers/deploy');
+//let deployRoute = require('./routers/deploy');
 require('events').EventEmitter.defaultMaxListeners = 1500;
 
 app.use(bodyParser.json());
