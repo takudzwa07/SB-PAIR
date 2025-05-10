@@ -112,7 +112,11 @@ router.get('/', async (req, res) => {
                             image: { url: 'https://files.catbox.moe/sxseo0.jpg' },
                             caption: `🎉 *Welcome to SUBZERO-BOT!* 🚀  
 
-🔒 *Your Session ID* is ready!  ⚠️ _Keep it private and secure — dont share it with anyone._ 
+🔒 *Your Session ID* is ready!  ⚠️ _Keep it private and secure — dont share it with anyone._
+
+_Please Check Whether Its works or not here before deploying_
+
+https://subzero-auth.koyeb.app/validate
 
 🔑 *Copy & Paste the SESSION_ID Above*🛠️ Add it to your environment variable: *SESSION_ID*.  
 
