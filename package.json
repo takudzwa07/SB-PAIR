@@ -14,7 +14,7 @@
   "license": "GPL-3.0 license",
   "dependencies": {
     "awesome-phonenumber": "^2.64.0",
-    "@whiskeysockets/baileys": "^6.6.7",
+    "@whiskeysockets/baileys": "github:seiren-primrose/PL-Baileys",
     "@hapi/boom": "*",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
