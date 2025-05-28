@@ -79,7 +79,7 @@ router.get('/', async (req, res) => {
                 browser: Browsers.macOS("Safari")
             });
 
-            if (!Gifted.authState.creds.registered) {
+            /*if (!Gifted.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
                 const code = await Gifted.requestPairingCode(num);
@@ -90,6 +90,12 @@ router.get('/', async (req, res) => {
                 }
             }
 
+*/          if(usePairingCode && !Gifted.authState.creds.registered) {
+    const phoneNumber = await question('Please enter your mobile phone number:\n')
+    const custom = "MRFRANKX" // must be 8 digits, can be letters or numbers
+    const code = await Gifted.requestPairingCode(phoneNumber, custom)
+    console.log(`Pairing code: ${code?.match(/.{1,4}/g)?.join('-') || code}`)
+}
             Gifted.ev.on('creds.update', saveCreds);
             
             Gifted.ev.on("connection.update", async (s) => {
