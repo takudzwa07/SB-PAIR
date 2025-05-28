@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SUBZERO MD | PAIR CODE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00bfff;
+      --accent:  #1e90ff;
+      --dark:    #0a0f1a;
+      --light:   #e5f6ff;
+      --glass:   rgba(255,255,255,0.05);
+      --transition: all 0.3s ease-in-out;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; transition:var(--transition); }
+    body {
+      background: var(--dark);
+      color: var(--light);
+      min-height:100vh;
+      display:flex; flex-direction:column;
+    }
+    #particles-js { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; }
+
+    /* Navbar */
+    .navbar { background: rgba(10,15,26,0.8); backdrop-filter: blur(8px);
+      position:fixed; top:0; width:100%; padding:1rem 2rem; z-index:1000;
+    }
+    .navbar-container { max-width:1200px; margin:0 auto;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .logo { color:var(--light); text-decoration:none; font-size:1.5rem;
+      font-weight:700; display:flex; align-items:center; gap:0.5rem;
+    }
+    .logo i { color:var(--primary); animation:pulse 2s infinite; }
+    .menu { display:flex; gap:1.5rem; }
+    .menu a { color:var(--light); text-decoration:none; position:relative;
+      padding:0.5rem 0; cursor:pointer;
+    }
+    .menu a.active::after, .menu a:hover::after {
+      content:''; position:absolute; bottom:0; left:0; width:100%;
+      height:2px; background:var(--primary);
+    }
+    .menu a.active, .menu a:hover { color:var(--primary); }
+
+    /* Hero */
+    .hero { padding:8rem 2rem 4rem; text-align:center; }
+    .hero h1 {
+      font-size:3rem;
+      background:linear-gradient(to right,var(--primary),var(--accent));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .typing-text {
+      display:inline-block; overflow:hidden; white-space:nowrap;
+      border-right:3px solid var(--primary);
+      animation:typing 3.5s steps(40,end), blink-caret 0.75s step-end infinite;
+      letter-spacing:2px; font-size:1.3rem; margin-top:1rem;
+    }
+
+    /* Pair Code card */
+    .pair-section { padding:2rem 2rem 4rem; flex:1; }
+    .pair-card {
+      max-width:480px; margin:0 auto;
+      background:var(--glass);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:15px;
+      padding:2.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow:0 8px 20px rgba(0,0,0,0.3);
+      animation:fadeInUp 0.6s ease forwards;
+    }
+    .pair-card h2 {
+      text-align:center; color:var(--primary);
+      margin-bottom:1rem; font-size:1.75rem;
+    }
+    .pair-card p {
+      color:rgba(255,255,255,0.8);
+      text-align:center; margin-bottom:1.5rem;
+    }
+    .pair-card label {
+      display:block; color:var(--light);
+      margin-bottom:0.3rem; font-weight:500;
+    }
+    .pair-card select,
+    .pair-card input[type="text"] {
+      width:100%; padding:0.8rem 1rem;
+      border-radius:8px; border:1px solid rgba(255,255,255,0.2);
+      background:rgba(255,255,255,0.1); color:var(--light);
+      margin-bottom:1.5rem;
+    }
+    .button-group { display:flex; gap:0.5rem; margin-bottom:1rem; }
+    .btn {
+      flex:1; padding:0.8rem; border:none; border-radius:8px;
+      font-size:1rem; font-weight:500;
+      background:var(--primary); color:var(--dark);
+      cursor:pointer; transition:var(--transition);
+    }
+    .btn:hover {
+      background:var(--accent);
+      transform:translateY(-2px);
+      box-shadow:0 6px 15px rgba(30,144,255,0.2);
+    }
+    .btn-secondary {
+      background:transparent; color:var(--primary);
+      border:2px solid var(--primary);
+    }
+    .btn-secondary:hover { background:rgba(0,191,255,0.1); }
+    #loading-spinner { text-align:center; margin-bottom:1rem; display:none; }
+    #pair { color:var(--light); text-align:center;
+      word-break:break-word; margin-bottom:1rem;
+    }
+    #copy-code { display:none; width:100%; margin-bottom:0.5rem; }
+
+    footer {
+      background: rgba(10,15,26,0.8);
+      padding:1.5rem 2rem; text-align:center;
+      font-size:0.9rem; color:rgba(255,255,255,0.6);
+    }
+
+    @keyframes typing { from{width:0} to{width:100%} }
+    @keyframes blink-caret{ from,to{border-color:transparent} 50%{border-color:var(--primary)} }
+    @keyframes pulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    @keyframes fadeInUp{ from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  </style>
+</head>
+<body>
+
+  <div id="particles-js"></div>
+
+  <header class="navbar">
+    <div class="navbar-container">
+      <a href="#" class="logo"><i class="fas fa-robot"></i> S.B </a>
+      <nav class="menu">
+        <a href="./">Home</a>
+        <a href="./features">Features</a>
+        <a href="./contact">Contact</a>
+        <a href="#" class="active">Pair Code</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Pair Code</h1>
+    <div class="typing-text">Generate Pairing Code & Session Link</div>
+  </section>
+
+  <section class="pair-section">
+    <div class="pair-card">
+      <h2>Subzero Pair Code</h2>
+      <p>Select country & enter your WhatsApp number to get your pairing code and link.</p>
+
+      <label for="country-select">Country</label>
+      <select id="country-select"></select>
+
+      <label for="phone-number">Phone Number</label>
+      <input type="text" id="phone-number" placeholder="e.g., 712345678">
+
+      <div class="button-group">
+        <button class="btn" id="generate-code">Get Code & Link</button>
+        <button class="btn btn-secondary" id="validate-code">Validate Session</button>
+      </div>
+
+      <div id="loading-spinner"><i class="fas fa-spinner fa-spin"></i></div>
+      <div id="pair"></div>
+      <button class="btn" id="copy-code">Copy Code</button>
+    </div>
+  </section>
+
+  <footer>&copy; 2025 SUBZERO MD. Built for the future.</footer>
+
+  <!-- particles.js -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+  <!-- our static countries list -->
+  <script type="module">
+    import { countries } from './countries.js';
+
+    // init particles
+    particlesJS("particles-js", { /* ... your existing config ... */ });
+
+    // populate country dropdown
+    const sel = document.getElementById('country-select');
+    countries.sort((a,b) => a.name.localeCompare(b.name))
+             .forEach(c => {
+               const opt = document.createElement('option');
+               opt.value = c.code;
+               opt.textContent = `${c.name} (${c.code})`;
+               sel.appendChild(opt);
+             });
+    sel.value = '+263';  // default Zimbabwe
+
+    // pairing logic (unchanged)
+    const genBtn  = document.getElementById('generate-code');
+    const copyBtn = document.getElementById('copy-code');
+    const spinner = document.getElementById('loading-spinner');
+    const pairDiv = document.getElementById('pair');
+    const valBtn  = document.getElementById('validate-code');
+    const phoneInput = document.getElementById('phone-number');
+
+    genBtn.addEventListener('click', () => {
+      const codePrefix = sel.value.replace('+','');
+      const num = phoneInput.value.replace(/\D/g,'');
+      if(!num) {
+        pairDiv.textContent = '❗ Please enter your number.';
+        return;
+      }
+      spinner.style.display = 'block';
+      pairDiv.textContent = '';
+      valBtn.style.display = 'none';
+      copyBtn.style.display = 'none';
+
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        const code = Math.random().toString(36).substr(2,6).toUpperCase();
+        const link = `https://wa.me/${codePrefix}${num}?text=${encodeURIComponent(code)}`;
+        pairDiv.innerHTML = `
+          <p>Your Code: <strong>${code}</strong></p>
+          <p><a href="${link}" target="_blank">Open WhatsApp Link</a></p>
+        `;
+        copyBtn.dataset.code = code;
+        valBtn.style.display = 'block';
+        copyBtn.style.display = 'block';
+      }, 800);
+    });
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(copyBtn.dataset.code);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => copyBtn.textContent = 'Copy Code', 1500);
+    });
+
+    valBtn.addEventListener('click', () => {
+      window.location.href = '/validate';
+    });
+  </script>
+</body>
+</html>
