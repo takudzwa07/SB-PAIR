@@ -6,6 +6,10 @@
   <title>SUBZERO MD | PAIR CODE</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
   <style>
     :root {
       --primary: #00bfff;
@@ -31,35 +35,51 @@
       background: rgba(10,15,26,0.8);
       backdrop-filter: blur(8px);
       position:fixed; top:0; width:100%; padding:1rem 2rem; z-index:1000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
     .navbar-container {
       max-width:1200px; margin:0 auto;
       display:flex; justify-content:space-between; align-items:center;
     }
-    .logo { color:var(--light); text-decoration:none; font-size:1.5rem; font-weight:700; display:flex; align-items:center; gap:0.5rem; }
-    .logo i { color:var(--primary); animation:pulse 2s infinite; }
+    .logo { 
+      color:var(--light); text-decoration:none; font-size:1.5rem; 
+      font-weight:700; display:flex; align-items:center; gap:0.5rem;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .logo i { animation:pulse 2s infinite; }
     .menu { display:flex; gap:1.5rem; }
     .menu a {
       color:var(--light); text-decoration:none;
       position:relative; padding:0.5rem 0; cursor:pointer;
     }
     .menu a.active::after, .menu a:hover::after {
-      content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--primary);
+      content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; 
+      background:var(--primary);
+      animation: underlineGrow 0.3s ease-out forwards;
     }
     .menu a.active, .menu a:hover { color:var(--primary); }
 
     /* Hero */
-    .hero { padding:8rem 2rem 4rem; text-align:center; }
+    .hero { 
+      padding:8rem 2rem 4rem; text-align:center;
+      background: radial-gradient(circle at center, rgba(0,191,255,0.1) 0%, transparent 70%);
+    }
     .hero h1 {
       font-size:3rem;
       background:linear-gradient(to right,var(--primary),var(--accent));
       -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-shadow: 0 0 20px rgba(0,191,255,0.3);
+      margin-bottom: 1rem;
     }
     .typing-text {
       display:inline-block; overflow:hidden; white-space:nowrap;
       border-right:3px solid var(--primary);
       animation:typing 3.5s steps(40,end), blink-caret 0.75s step-end infinite;
       letter-spacing:2px; font-size:1.3rem; margin-top:1rem;
+      color: rgba(255,255,255,0.8);
     }
 
     /* Pair Code card */
@@ -73,6 +93,11 @@
       backdrop-filter: blur(12px);
       box-shadow:0 8px 20px rgba(0,0,0,0.3);
       animation:fadeInUp 0.6s ease forwards;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .pair-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.4);
     }
     .pair-card h2 {
       text-align:center; color:var(--primary);
@@ -86,12 +111,17 @@
       display:block; color:var(--light);
       margin-bottom:0.3rem; font-weight:500;
     }
-    .pair-card select,
     .pair-card input[type="text"] {
       width:100%; padding:0.8rem 1rem;
       border-radius:8px; border:1px solid rgba(255,255,255,0.2);
       background:rgba(255,255,255,0.1); color:var(--light);
       margin-bottom:1.5rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .pair-card input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0,191,255,0.2);
     }
     .button-group { display:flex; gap:0.5rem; margin-bottom:1rem; }
     .btn {
@@ -100,6 +130,23 @@
       font-size:1rem; font-weight:500;
       background:var(--primary); color:var(--dark);
       cursor:pointer; transition:var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: rgba(255,255,255,0.1);
+      transform: scale(0);
+      transition: transform 0.5s;
+      border-radius: 50%;
+    }
+    .btn:hover::after {
+      transform: scale(1);
     }
     .btn:hover {
       background:var(--accent);
@@ -111,23 +158,95 @@
     }
     .btn-secondary:hover { background:rgba(0,191,255,0.1); }
 
-    #loading-spinner { text-align:center; margin-bottom:1rem; display:none; }
+    #loading-spinner { 
+      text-align:center; margin-bottom:1rem; display:none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    #loading-spinner.show {
+      opacity: 1;
+    }
     #pair {
       color:var(--light); text-align:center;
       word-break:break-word; margin-bottom:1rem;
     }
-    #copy-code, #validate-code { display:none; width:100%; margin-bottom:0.5rem; }
+    #copy-code, #validate-code { 
+      display:none; width:100%; margin-bottom:0.5rem;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    #copy-code.show, #validate-code.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Loading animation */
+    .lds-ellipsis {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 20px;
+    }
+    .lds-ellipsis div {
+      position: absolute;
+      top: 8px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+    .lds-ellipsis div:nth-child(1) {
+      left: 8px;
+      animation: lds-ellipsis1 0.6s infinite;
+    }
+    .lds-ellipsis div:nth-child(2) {
+      left: 8px;
+      animation: lds-ellipsis2 0.6s infinite;
+    }
+    .lds-ellipsis div:nth-child(3) {
+      left: 32px;
+      animation: lds-ellipsis2 0.6s infinite;
+    }
+    .lds-ellipsis div:nth-child(4) {
+      left: 56px;
+      animation: lds-ellipsis3 0.6s infinite;
+    }
 
     footer {
       background: rgba(10,15,26,0.8);
       padding:1.5rem 2rem; text-align:center;
       font-size:0.9rem; color:rgba(255,255,255,0.6);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
 
+    /* Animations */
     @keyframes typing { from{width:0} to{width:100%} }
     @keyframes blink-caret{ from,to{border-color:transparent} 50%{border-color:var(--primary)} }
     @keyframes pulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
     @keyframes fadeInUp{ from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes lds-ellipsis1 {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+    @keyframes lds-ellipsis3 {
+      0% { transform: scale(1); }
+      100% { transform: scale(0); }
+    }
+    @keyframes lds-ellipsis2 {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(24px, 0); }
+    }
+    @keyframes underlineGrow {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
   </style>
 </head>
 <body>
@@ -136,11 +255,10 @@
 
   <header class="navbar">
     <div class="navbar-container">
-      <a href="#" class="logo"><i class="fas fa-robot"></i> S.B </a>
+      <a href="#" class="logo"><i class="fas fa-robot"></i> SUBZERO</a>
       <nav class="menu">
         <a href="./">Home</a>
         <a href="./features">Features</a>
-        <a href="./contact">Contact</a>
         <a href="#" class="active">Pair Code</a>
       </nav>
     </div>
@@ -154,30 +272,31 @@
   <section class="pair-section">
     <div class="pair-card">
       <h2>Subzero Pair Code</h2>
-      <p>Select country & enter your WhatsApp number to get your pairing code and link.</p>
-
-      <label for="country-select">Country</label>
-      <select id="country-select"></select>
+      <p>Enter your WhatsApp number with country code to get your pairing code and link.</p>
 
       <label for="phone-number">Phone Number</label>
-      <input type="text" id="phone-number" placeholder="e.g., 712345678">
+      <input type="text" id="phone-number" placeholder="e.g., +263712345678">
 
       <div class="button-group">
         <button class="btn" id="generate-code">Get Code & Link</button>
         <button class="btn btn-secondary" id="validate-code">Validate Session</button>
       </div>
 
-      <div id="loading-spinner"><i class="fas fa-spinner fa-spin"></i></div>
+      <div id="loading-spinner">
+        <div class="lds-ellipsis">
+          <div></div><div></div><div></div><div></div>
+        </div>
+        <p>Generating your code...</p>
+      </div>
       <div id="pair"></div>
       <button class="btn" id="copy-code">Copy Code</button>
     </div>
   </section>
 
-  <footer>&copy; 2025 SUBZERO MD. Built for the future.</footer>
+  <footer>&copy; <span id="currentYear"></span> SUBZERO MD. Built for the future.</footer>
 
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
-    // 1) Initialize Particles.js network
+    // Initialize Particles.js
     particlesJS("particles-js", {
       particles: {
         number: { value: 60 },
@@ -205,110 +324,123 @@
       retina_detect: true
     });
 
-    // 2) Populate <select> with ALL countries A→Z (Rest Countries API)
-    fetch('https://restcountries.com/v3.1/all?fields=name,idd,cca2')
-      .then(res => res.json())
-      .then(countries => {
-        const sel = document.getElementById('country-select');
-        // sort alphabetically by common name
-        countries.sort((a,b) => a.name.common.localeCompare(b.name.common))
-                 .forEach(c => {
-          const root = c.idd.root || '';
-          const suffixes = c.idd.suffixes || [''];
-          suffixes.forEach(suf => {
-            const code = root + (suf || '');
-            if(!code) return;
-            // flag emoji from ISO2
-            const iso = c.cca2.toUpperCase();
-            const flag = iso.split('')
-                            .map(ch => String.fromCodePoint(0x1F1E6 + ch.charCodeAt(0) - 65))
-                            .join('');
-            const opt = document.createElement('option');
-            opt.value = code;
-            opt.textContent = `${flag} ${c.name.common} (${code})`;
-            sel.append(opt);
-          });
+    // Set current year in footer
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Show welcome message
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(() => {
+        swal({
+          title: "Welcome to SUBZERO MD!",
+          text: "Generate your pairing code to connect your WhatsApp",
+          icon: "info",
+          button: "Get Started",
+          timer: 3000
         });
-        // default to Zimbabwe (+263)
-        sel.value = '263';
-      })
-      .catch(() => {
-        // fallback: only Zimbabwe
-        const sel = document.getElementById('country-select');
-        const opt = document.createElement('option');
-        opt.value = '263';
-        opt.textContent = '🇿🇼 Zimbabwe (+263)';
-        sel.append(opt);
-      });
-
-    // 3) Theme toggle & persistence
-    const themeToggle = document.createElement('button');
-    themeToggle.className = 'theme-toggle';
-    document.body.appendChild(themeToggle);
-    themeToggle.addEventListener('click', () => {
-      const cur = document.documentElement.getAttribute('data-theme');
-      const nxt = cur==='light'?'dark':'light';
-      document.documentElement.setAttribute('data-theme', nxt);
-      localStorage.setItem('theme', nxt);
-      themeToggle.innerHTML = nxt==='dark'
-        ? '<i class="fas fa-moon"></i>'
-        : '<i class="fas fa-sun"></i>';
+      }, 1000);
     });
-    // set initial theme
-    const saved = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', saved);
-    themeToggle.innerHTML = saved==='dark'
-      ? '<i class="fas fa-moon"></i>'
-      : '<i class="fas fa-sun"></i>';
 
-    // 4) Pair code logic
+    // Pair code logic
     const genBtn  = document.getElementById('generate-code');
     const valBtn  = document.getElementById('validate-code');
     const copyBtn = document.getElementById('copy-code');
     const spinner = document.getElementById('loading-spinner');
     const pairDiv = document.getElementById('pair');
+    const phoneInput = document.getElementById('phone-number');
+
+    async function copyToClipboard() {
+      const code = copyBtn.dataset.code;
+      try {
+        await navigator.clipboard.writeText(code);
+        copyBtn.textContent = 'Copied!';
+        copyBtn.classList.add('btn-secondary');
+        setTimeout(() => {
+          copyBtn.textContent = 'Copy Code';
+          copyBtn.classList.remove('btn-secondary');
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+        pairDiv.innerHTML += '<p style="color:#ff6b6b">Failed to copy to clipboard</p>';
+      }
+    }
 
     genBtn.addEventListener('click', async () => {
-      const dial = document.getElementById('country-select').value;
-      const num  = document.getElementById('phone-number').value.replace(/\D/g,'');
-      if (!dial || !num) {
-        pairDiv.textContent = '❗ Please select a country and enter your number.';
+      const num = phoneInput.value.replace(/\D/g,'');
+      if (!num) {
+        pairDiv.textContent = '❗ Please enter your WhatsApp number with country code.';
+        pairDiv.style.animation = 'shake 0.5s';
+        setTimeout(() => pairDiv.style.animation = '', 500);
         return;
       }
-      const full = dial + num;
+      
+      // Show loading spinner with fade-in
       spinner.style.display = 'block';
+      setTimeout(() => spinner.classList.add('show'), 10);
+      
       pairDiv.textContent = '';
       valBtn.style.display = 'none';
       copyBtn.style.display = 'none';
+      genBtn.disabled = true;
 
       try {
-        const res = await fetch(`/code?number=${full}`);
-        const { code = '❗ Service Unavailable' } = await res.json();
-        const waLink = `https://wa.me/${full}?text=${encodeURIComponent(code)}`;
+        // Format the number for display
+        let formatted = "+" + num;
+        phoneInput.value = formatted;
+        
+        // Simulate network delay for demo (remove in production)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        const { data } = await axios.get(`/code?number=${num}`);
+        const code = data.code || '❗ Service Unavailable';
+        const waLink = `https://wa.me/${num}?text=${encodeURIComponent(code)}`;
+        
         pairDiv.innerHTML = `
-          <p>Your Code: <strong>${code}</strong></p>
-          <p><a href="${waLink}" target="_blank">Open WhatsApp Link</a></p>
+          <p>Your Code: <strong style="color:var(--primary)">${code}</strong></p>
+          <p><a href="${waLink}" target="_blank" style="color:var(--primary);text-decoration:none;">
+            <i class="fas fa-external-link-alt"></i> Open WhatsApp Link
+          </a></p>
         `;
+        
         copyBtn.dataset.code = code;
-        valBtn.style.display = 'block';
         copyBtn.style.display = 'block';
+        valBtn.style.display = 'block';
+        
+        // Animate buttons in
+        setTimeout(() => {
+          copyBtn.classList.add('show');
+          valBtn.classList.add('show');
+        }, 100);
       } catch {
-        pairDiv.textContent = '❗ Error, please try again later.';
+        pairDiv.innerHTML = `
+          <p style="color:#ff6b6b">❗ Error generating code</p>
+          <p>Please check your number and try again</p>
+        `;
       } finally {
-        spinner.style.display = 'none';
+        // Hide loading spinner with fade-out
+        spinner.classList.remove('show');
+        setTimeout(() => spinner.style.display = 'none', 300);
+        genBtn.disabled = false;
       }
     });
 
-    copyBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(copyBtn.dataset.code).then(() => {
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => copyBtn.textContent = 'Copy Code', 2000);
-      });
-    });
+    copyBtn.addEventListener('click', copyToClipboard);
 
     valBtn.addEventListener('click', () => {
       window.location.href = '/validate';
     });
+
+    // Format phone number as user types
+    phoneInput.addEventListener('input', function(e) {
+      let value = this.value.replace(/\D/g, '');
+      if (value.length > 0) {
+        value = '+' + value;
+      }
+      this.value = value;
+    });
+
+    // Add floating animation to the pair card
+    const pairCard = document.querySelector('.pair-card');
+    pairCard.style.animation = 'float 6s ease-in-out infinite';
   </script>
 </body>
 </html>
